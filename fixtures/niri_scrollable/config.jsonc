@@ -1,0 +1,67 @@
+// Niri scrollable bottom bar fixture
+{
+  "layer": "top",
+  "position": "bottom",
+  "height": 32,
+  "spacing": 6,
+  "modules-left": [
+    "niri/workspaces"
+  ],
+  "modules-center": [
+    "clock"
+  ],
+  "modules-right": [
+    "custom/weather",
+    "pulseaudio",
+    "network",
+    "battery"
+  ],
+
+  "niri/workspaces": {
+    "format": "{index}: {name}",
+    "all-outputs": false
+  },
+
+  "clock": {
+    "format": "{:%H:%M}",
+    "format-alt": "{:%Y-%m-%d %H:%M:%S}",
+    "interval": 1,
+    "tooltip-format": "<tt><small>{calendar}</small></tt>"
+  },
+
+  "custom/weather": {
+    "exec": "curl -sf 'https://wttr.in/?format=1' || echo 'N/A'",
+    "interval": 900,
+    "on-click": "xdg-open https://wttr.in",
+    "on-scroll-up": "notify-send 'Weather' 'Refreshing forecast'",
+    "format": "{}"
+  },
+
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰖁 muted",
+    "format-icons": {
+      "default": ["󰕿", "󰖀", "󰕾"]
+    },
+    "scroll-step": 5,
+    "on-click": "pavucontrol"
+  },
+
+  "network": {
+    "format-wifi": "󰤨 {essid} ({signalStrength}%)",
+    "format-ethernet": "󰈀 {ifname}",
+    "format-disconnected": "󰤭 offline",
+    "interval": 5
+  },
+
+  "battery": {
+    "interval": 10,
+    "format": "{icon} {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-icons": ["󰁺", "󰁼", "󰁾", "󰂀", "󰁹"],
+    "states": {
+      "warning": 25,
+      "critical": 10
+    }
+  }
+}

@@ -1,0 +1,80 @@
+@define-color base rgba(30, 30, 46, 0.88);
+@define-color mantle rgba(24, 24, 37, 0.92);
+@define-color text #cdd6f4;
+@define-color mauve #cba6f7;
+@define-color peach #fab387;
+@define-color red #f38ba8;
+@define-color green #a6e3a1;
+
+* {
+  font-family: "JetBrainsMono Nerd Font", sans-serif;
+  font-size: 12px;
+  color: @text;
+}
+
+window#waybar {
+  background-color: @base;
+  border: 1px solid rgba(203, 166, 247, 0.35);
+  border-radius: 18px;
+}
+
+#custom-launcher,
+#workspaces,
+#custom-media,
+#clock,
+#tray,
+#pulseaudio,
+#network,
+#battery,
+#custom-power {
+  background-color: @mantle;
+  padding: 4px 12px;
+  margin: 4px 2px;
+  border-radius: 14px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#custom-launcher {
+  color: @mauve;
+  font-weight: bold;
+}
+
+#custom-media {
+  color: @green;
+}
+
+#custom-power {
+  color: @red;
+}
+
+#workspaces button {
+  padding: 0 6px;
+  color: rgba(205, 214, 244, 0.65);
+  border-radius: 10px;
+}
+
+#workspaces button.active {
+  background-color: @mauve;
+  color: #11111b;
+}
+
+#workspaces button:hover {
+  background-color: rgba(203, 166, 247, 0.2);
+}
+
+#battery.warning {
+  color: @peach;
+}
+
+#battery.critical {
+  background-color: @red;
+  color: #11111b;
+  animation: blink 0.8s linear infinite alternate;
+}
+
+@keyframes blink {
+  to {
+    background-color: rgba(243, 139, 168, 0.25);
+    color: @red;
+  }
+}
