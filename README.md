@@ -10,7 +10,7 @@ Wayland desktop ecosystems such as **Omarchy**, **Noctalia**, and **DankMaterial
 
 - Parses Waybar `config.jsonc` (including `//` / `/* */` comments, trailing commas, `include` directives, and multi-bar arrays).
 - Extracts mappable GTK CSS design tokens (`@define-color`, colors, radii, fonts, padding, margins, state styles) into a centralized `Theme.qml` singleton.
-- Generates modular QML components (`shell.qml`, `Bar.qml`, `Theme.qml`, and `modules/*.qml`) tailored for **Hyprland** or **Niri**.
+- Generates modular QML components (`qmldir`, `shell.qml`, `Theme.qml`, and `components/*.qml`) tailored for **Hyprland** or **Niri**.
 - Produces an explicit migration report (`--report`) calling out everything transpiled natively, everything backed by `Process`, and every unsupported CSS rule (`:hover`, `@keyframes`, `box-shadow`, gradients) with line numbers and QML hints.
 
 Zero third-party Python runtime dependencies — uses only the Python >= 3.10 standard library.
@@ -19,10 +19,12 @@ Zero third-party Python runtime dependencies — uses only the Python >= 3.10 st
 
 ```bash
 # Editable install from a local clone
+git clone https://github.com/Prateek-squadron/waybar2qs.git
+cd waybar2qs
 pip install -e .
 
 # Or install as an isolated CLI tool with uv
-uv tool install .
+uv tool install git+https://github.com/Prateek-squadron/waybar2qs.git
 ```
 
 ## CLI Usage
@@ -70,14 +72,14 @@ waybar2qs fixtures/niri_scrollable/config.jsonc --dry-run --report-json
 | Waybar Module | Quickshell Backend | Support Level |
 | --- | --- | --- |
 | `hyprland/workspaces` | `Quickshell.Hyprland` (`Hyprland.workspaces`) | Native |
-| `clock` | `SystemClock` / `Qt.formatDateTime` | Native / Partial |
-| `tray` | `Quickshell.Services.SystemTray` | Native |
-| `niri/workspaces` | `Process` (`niri msg -j workspaces` / event stream) | Process-backed |
-| `pulseaudio` | `Process` (`wpctl` / `pactl`) | Process-backed |
-| `network` | `Process` (`nmcli` / `ip` / `/sys/class/net`) | Process-backed |
-| `battery` | `Process` / sysfs (`/sys/class/power_supply`) | Process-backed |
-| `custom/*` | `Process` (`exec`, `exec-if`, `interval`, `return-type: json`, `on-click`, `on-scroll-*`) | Process-backed |
-| Other modules | Placeholder QML component with original config metadata | Stub |
+| `clock` | `Quickshell.SystemClock` / `Qt.formatDateTime` | Native |
+| `pulseaudio` / `wireplumber` | `Quickshell.Services.Pipewire` (`PwObjectTracker`) | Native |
+| `battery` | `Quickshell.Services.UPower` (`UPower.displayDevice`) | Native |
+| `network` | `Quickshell.Networking` (`WifiDevice` / `WiredDevice`) | Native / Partial |
+| `tray` | `Quickshell.Services.SystemTray` + `IconImage` + `QsMenuAnchor` | Native |
+| `niri/workspaces` | `Quickshell.Io.Process` (`niri msg --json workspaces` + `event-stream`) | Process-backed |
+| `custom/*` | `Quickshell.Io.Process` (`exec`, `interval`, `return-type: json`, `on-click*`, `on-scroll-*`) | Process-backed |
+| Other modules | Placeholder QML component (`StubModuleWidget.qml`) | Stub |
 
 ## How `--report` Works
 
@@ -101,8 +103,8 @@ Generated project layout:
 
 ```text
 quickshell-bar/
-├── shell.qml          # Entry point instantiating each Bar
-├── Bar.qml            # PanelWindow layout (left / center / right sections)
+├── qmldir             # Registers Theme as a QML singleton
+├── shell.qml          # ShellRoot + Variants + PanelWindow bar layouts
 ├── Theme.qml          # Extracted @define-color & style design tokens
-└── modules/           # Individual module QML components
+└── components/        # Modular per-widget QML components
 ```

@@ -27,6 +27,10 @@ classifiers = [
 [project.optional-dependencies]
 dev = ["pytest>=7.0"]
 
+[project.urls]
+Homepage = "https://github.com/Prateek-squadron/waybar2qs"
+Repository = "https://github.com/Prateek-squadron/waybar2qs"
+
 [project.scripts]
 waybar2qs = "waybar2qs.cli:main"
 
