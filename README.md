@@ -1,5 +1,9 @@
 # waybar2qs
 
+[![PyPI version](https://img.shields.io/pypi/v/waybar2qs)](https://pypi.org/project/waybar2qs/)
+[![CI](https://github.com/Prateek-squadron/waybar2qs/actions/workflows/ci.yml/badge.svg)](https://github.com/Prateek-squadron/waybar2qs/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 Transpile Waybar configurations (`config.jsonc` + `style.css`) into modular [Quickshell](https://quickshell.outfoxxed.me/) (`shell.qml`) projects, accompanied by an honest migration audit report.
 
 ## Why `waybar2qs`?
@@ -18,13 +22,16 @@ Zero third-party Python runtime dependencies — uses only the Python >= 3.10 st
 ## Installation
 
 ```bash
-# Editable install from a local clone
+# Install from PyPI
+pip install waybar2qs
+
+# Or install as an isolated CLI tool with uv
+uv tool install waybar2qs
+
+# Or editable install from source
 git clone https://github.com/Prateek-squadron/waybar2qs.git
 cd waybar2qs
 pip install -e .
-
-# Or install as an isolated CLI tool with uv
-uv tool install git+https://github.com/Prateek-squadron/waybar2qs.git
 ```
 
 ## CLI Usage
