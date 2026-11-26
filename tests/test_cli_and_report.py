@@ -10,7 +10,7 @@ import sys
 
 import pytest
 
-from waybar2qs.cli import main
+from waybar2qs.cli import _find_qt6_qmllint, main
 from waybar2qs.ir import ConversionReport, ModuleConversionNote, UnsupportedCssItem
 from waybar2qs.report import format_report_json, format_report_text
 
@@ -23,26 +23,28 @@ def test_cli_dry_run_lint_and_report(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     out_dir = tmp_path / "dry-out"
-    rc = main(
-        [
-            str(OMARCHY_CFG),
-            "--style",
-            str(OMARCHY_CSS),
-            "-o",
-            str(out_dir),
-            "--dry-run",
-            "--lint",
-            "--report",
-        ]
-    )
+    has_qmllint = _find_qt6_qmllint() is not None
+    argv = [
+        str(OMARCHY_CFG),
+        "--style",
+        str(OMARCHY_CSS),
+        "-o",
+        str(out_dir),
+        "--dry-run",
+        "--report",
+    ]
+    if has_qmllint:
+        argv.append("--lint")
+    rc = main(argv)
     captured = capsys.readouterr()
     assert rc == 0
     # --dry-run must not write project files to disk
     assert not out_dir.exists()
     assert "# waybar2qs Migration Report" in captured.out
     assert "## Module-by-Module Conversion" in captured.out
-    assert "## qmllint Verification" in captured.out
-    assert "PASSED" in captured.out
+    if has_qmllint:
+        assert "## qmllint Verification" in captured.out
+        assert "PASSED" in captured.out
 
 
 def test_cli_report_json_output_is_valid_json(
